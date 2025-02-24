@@ -16,6 +16,14 @@ def get_posts():
 
 @app.route('/api/add/', methods=['POST'])
 def add_post(post):
+    data = request.get_json()
+    title = data.get('title')
+    content = data.get('content')
+
+    if not title or not content:
+        return jsonify({"error": "Both title and content are required"}), 400
+
+    post = {"id": len(POSTS) + 1, "title": title, "content": content}
     POSTS.append(post)
     return jsonify(post)
 
