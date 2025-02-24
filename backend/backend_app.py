@@ -14,6 +14,11 @@ POSTS = [
 def get_posts():
     return jsonify(POSTS)
 
+@app.route('/api/add/', methods=['POST'])
+def add_post(post):
+    POSTS.append(post)
+    return jsonify(post)
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5002, debug=True)
