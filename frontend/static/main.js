@@ -17,8 +17,17 @@ function loadPosts() {
 
     // Use the Fetch API to send a GET request to the /posts endpoint
     fetch(baseUrl + '/posts')
-        .then(response => response.json())  // Parse the JSON data from the response
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
         .then(data => {  // Once the data is ready, we can use it
+            // Check if data is an array
+            if (!Array.isArray(data)) {
+                throw new TypeError('Expected an array but got ' + typeof data);
+            }
+
             // Clear out the post container first
             const postContainer = document.getElementById('post-container');
             postContainer.innerHTML = '';
