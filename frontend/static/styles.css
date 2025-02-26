@@ -43,8 +43,6 @@ body {
 
 .input-field input::placeholder {
     color: #aaa;
-}
-
     background-color: rgb(0, 0, 255); /* kräftiges rgb blau */
     color: #fff;
     cursor: pointer;
