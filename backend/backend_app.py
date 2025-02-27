@@ -19,10 +19,14 @@ POSTS = [
 
 @app.route('/api/posts', methods=['GET'])
 def get_posts():
+    """
+    List all posts with optional sorting by title or content.
+    Supports query parameters: sort (title/content) and direction (asc/desc).
+    Returns: JSON response with posts list.
+    """
     sort_field = request.args.get('sort')
     sort_direction = request.args.get('direction', 'asc')
 
-    # Return original list if no sort parameters
     if not sort_field:
         return jsonify(POSTS)
 
@@ -44,6 +48,11 @@ def get_posts():
 
 @app.route('/api/add/', methods=['POST'])
 def add_post():
+    """
+    Create a new post.
+    Accepts: JSON with title and content fields.
+    Returns: Created post with 201 status code.
+    """
     data = request.get_json()
     title = data.get('title')
     content = data.get('content')
@@ -54,13 +63,25 @@ def add_post():
 
 @app.route('/api/posts/<int:post_id>', methods=['DELETE'])
 def delete_post(post_id):
+    """
+    Delete a post by ID.
+    Parameters: post_id (int)
+    Returns: Success/error message with appropriate status code.
+    """
     for index, post in enumerate(POSTS):
         if post['id'] == post_id:
             POSTS.pop(index)
             return jsonify({"message": f"Post with id {post_id} has been deleted successfully."}), 200
 
+
 @app.route('/api/posts/<int:post_id>', methods=['PUT'])
 def update_post(post_id):
+    """
+    Update a post by ID.
+    Parameters: post_id (int)
+    Accepts: JSON with optional title and content fields.
+    Returns: Updated post or error message.
+    """
     data = request.get_json()
     for post in POSTS:
         if post['id'] == post_id:
@@ -74,6 +95,11 @@ def update_post(post_id):
 
 @app.route('/api/posts/search', methods=['GET'])
 def search_posts():
+    """
+    Search posts by title or content.
+    Accepts query parameters: title, content
+    Returns: List of matching posts.
+    """
     title_query = request.args.get('title', '').lower()
     content_query = request.args.get('content', '').lower()
 
