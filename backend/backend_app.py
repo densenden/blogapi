@@ -54,5 +54,19 @@ def update_post(post_id):
     return jsonify({"error": f"Post with id {post_id} not found"}), 404
 
 
+app.route('/api/posts/int:post_id', methods=['PUT'])
+def update_post(post_id): data = request.get_json()
+for post in POSTS:
+    if post['id'] == post_id:
+        if 'title' in data:
+            post['title'] = data['title']
+        if 'content' in data:
+            post['content'] = data['content']
+        return jsonify(post), 200
+
+return jsonify({"error": f"Post with id {post_id} not found"}), 404
+
+
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5002, debug=True)
