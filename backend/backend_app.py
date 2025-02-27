@@ -37,7 +37,7 @@ def delete_post(post_id):
         if post['id'] == post_id:
             POSTS.pop(index)
             return jsonify({"message": f"Post with id {post_id} has been deleted successfully."}), 200
-    return json/posts/<int:post_id>', methods=['PUT'])
+    returnapp.route('/api/posts/<int:post_id>', methods=['PUT'])
 def update_post(post_id):
     data = request.get_json()
     for post in POSTS:
