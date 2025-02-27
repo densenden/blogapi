@@ -17,11 +17,9 @@ POSTS = [
     {"id": 10, "title": "Garden Life", "content": "Busy bees hover\nButterflies dance through the air\nFlowers wave hello"}
 ]
 
-
 @app.route('/api/posts', methods=['GET'])
 def get_posts():
     return jsonify(POSTS)
-
 
 @app.route('/api/add/', methods=['POST'])
 def add_post():
@@ -33,40 +31,23 @@ def add_post():
     POSTS.append(post)
     return jsonify(post), 201
 
-
 @app.route('/api/posts/<int:post_id>', methods=['DELETE'])
 def delete_post(post_id):
     for index, post in enumerate(POSTS):
         if post['id'] == post_id:
             POSTS.pop(index)
             return jsonify({"message": f"Post with id {post_id} has been deleted successfully."}), 200
-    return jsonify({"error": f"Post with id {post_id} not found"}), 404
-
-
-@app.route('/api/posts/<int:post_id>', methods=['PUT'])
+    return json/posts/<int:post_id>', methods=['PUT'])
 def update_post(post_id):
+    data = request.get_json()
     for post in POSTS:
         if post['id'] == post_id:
-            data = request.get_json()
-            post['title'] = data.get('title', post['title'])
-            post['content'] = data.get('content', post['content'])
+            if 'title' in data:
+                post['title'] = data['title']
+            if 'content' in data:
+                post['content'] = data['content']
             return jsonify(post), 200
     return jsonify({"error": f"Post with id {post_id} not found"}), 404
-
-
-app.route('/api/posts/int:post_id', methods=['PUT'])
-def update_post(post_id): data = request.get_json()
-for post in POSTS:
-    if post['id'] == post_id:
-        if 'title' in data:
-            post['title'] = data['title']
-        if 'content' in data:
-            post['content'] = data['content']
-        return jsonify(post), 200
-
-return jsonify({"error": f"Post with id {post_id} not found"}), 404
-
-
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5002, debug=True)
