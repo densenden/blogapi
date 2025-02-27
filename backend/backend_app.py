@@ -2,6 +2,8 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from flask_swagger_ui import get_swaggerui_blueprint
 
+app = Flask(__name__)
+CORS(app)
 
 SWAGGER_URL="/api/docs"  # (1) swagger endpoint e.g. HTTP://localhost:5002/api/docs
 API_URL="/static/masterblog.json" # (2) ensure you create this dir and file
@@ -15,9 +17,6 @@ swagger_ui_blueprint = get_swaggerui_blueprint(
 )
 app.register_blueprint(swagger_ui_blueprint, url_prefix=SWAGGER_URL)
 
-
-app = Flask(__name__)
-CORS(app)
 
 POSTS = [
     {"id": 1, "title": "Cherry Blossom", "content": "Pink petals falling\nDancing in the spring breeze now\nNature's sweet goodbye"},
