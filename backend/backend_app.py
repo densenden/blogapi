@@ -1,22 +1,24 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from flask_swagger_ui import get_swaggerui_blueprint
+from uuid import uuid4
+
+
 
 app = Flask(__name__)
 CORS(app)
 
-SWAGGER_URL="/api/docs"  # (1) swagger endpoint e.g. HTTP://localhost:5002/api/docs
-API_URL="/static/masterblog.json" # (2) ensure you create this dir and file
+SWAGGER_URL = "/api/docs"
+API_URL = "/static/masterblog.json"
 
 swagger_ui_blueprint = get_swaggerui_blueprint(
     SWAGGER_URL,
     API_URL,
     config={
-        'app_name': 'Masterblog API' # (3) You can change this if you like
+        'app_name': 'Masterblog API'
     }
 )
 app.register_blueprint(swagger_ui_blueprint, url_prefix=SWAGGER_URL)
-
 
 POSTS = [
     {"id": 1, "title": "Cherry Blossom", "content": "Pink petals falling\nDancing in the spring breeze now\nNature's sweet goodbye"},
@@ -60,18 +62,19 @@ def get_posts():
 
     return jsonify(sorted_posts)
 
-@app.route('/api/add/', methods=['POST'])
+@app.route('/api/posts/', methods=['POST'])
 def add_post():
     """
-    Create a new post.
+    Create a new post with a UUID.
     Accepts: JSON with title and content fields.
     Returns: Created post with 201 status code.
     """
     data = request.get_json()
-    title = data.get('title')
-    content = data.get('content')
-
-    post = {"id": len(POSTS) + 1, "title": title, "content": content}
+    post = {
+        "id": str(uuid4()),
+        "title": data.get('title'),
+        "content": data.get('content')
+    }
     POSTS.append(post)
     return jsonify(post), 201
 
@@ -87,6 +90,7 @@ def delete_post(post_id):
             POSTS.pop(index)
             return jsonify({"message": f"Post with id {post_id} has been deleted successfully."}), 200
 
+    return jsonify({"error": f"Post with id {post_id} not found"}), 404
 
 @app.route('/api/posts/<int:post_id>', methods=['PUT'])
 def update_post(post_id):
@@ -106,7 +110,6 @@ def update_post(post_id):
             return jsonify(post), 200
     return jsonify({"error": f"Post with id {post_id} not found"}), 404
 
-
 @app.route('/api/posts/search', methods=['GET'])
 def search_posts():
     """
@@ -117,16 +120,12 @@ def search_posts():
     title_query = request.args.get('title', '').lower()
     content_query = request.args.get('content', '').lower()
 
-    matching_posts = []
     for post in POSTS:
         if (title_query and title_query in post['title'].lower()) or \
-           (content_query and content_query in post['content'].lower()):
+                (content_query and content_query in post['content'].lower()):
             matching_posts.append(post)
 
     return jsonify(matching_posts)
-
-
-
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5002, debug=True)
