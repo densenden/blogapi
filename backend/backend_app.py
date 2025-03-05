@@ -67,14 +67,9 @@ def posts():
         return jsonify(post), 201
 
 
-@app.route('/api/posts/<uuid:post_id>', methods=['DELETE'])
+@app.route('/api/posts/<post_id>', methods=['DELETE'])
 def delete_post(post_id):
     """Handle DELETE request for a post by ID."""
-    try:
-        UUID(post_id)
-    except ValueError:
-        return jsonify({"error": "Invalid post ID format"}), 400
-
     for index, post in enumerate(POSTS):
         if post['id'] == post_id:
             POSTS.pop(index)
