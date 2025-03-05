@@ -31,8 +31,10 @@ POSTS = [
     {"id": str(uuid4()), "title": "Garden Life", "content": "Busy bees hover\nButterflies dance through the air\nFlowers wave hello"}
 ]
 
+
 @app.route('/api/posts', methods=['GET', 'POST'])
 def posts():
+    """Handle GET and POST requests for posts."""
     if request.method == 'GET':
         sort_field = request.args.get('sort')
         sort_direction = request.args.get('direction', 'asc')
@@ -64,20 +66,24 @@ def posts():
         POSTS.append(post)
         return jsonify(post), 201
 
-@app.route('/api/posts/<int:post_id>', methods=['DELETE'])
+
+@app.route('/api/posts/<uuid:post_id>', methods=['DELETE'])
 def delete_post(post_id):
+    """Handle DELETE request for a post by ID."""
     for index, post in enumerate(POSTS):
-        if post['id'] == post_id:
+        if post['id'] == str(post_id):
             POSTS.pop(index)
             return jsonify({"message": f"Post with id {post_id} has been deleted successfully."}), 200
 
     return jsonify({"error": f"Post with id {post_id} not found"}), 404
 
-@app.route('/api/posts/<int:post_id>', methods=['PUT'])
+
+@app.route('/api/posts/<uuid:post_id>', methods=['PUT'])
 def update_post(post_id):
+    """Handle PUT request to update a post by ID."""
     data = request.get_json()
     for post in POSTS:
-        if post['id'] == post_id:
+        if post['id'] == str(post_id):
             if 'title' in data:
                 post['title'] = data['title']
             if 'content' in data:
@@ -85,9 +91,13 @@ def update_post(post_id):
             return jsonify(post), 200
     return jsonify({"error": f"Post with id {post_id} not found"}), 404
 
+
 @app.route('/api/posts/search', methods=['GET'])
 def search_posts():
+    """Handle GET request to search posts by title or content."""
     title_query = request.args.get('title', '').lower()
+    content_query = request.args.get('content', '').lower()
+
     matching_posts = []
     for post in POSTS:
         if (title_query and title_query in post['title'].lower()) or \
@@ -95,6 +105,7 @@ def search_posts():
             matching_posts.append(post)
 
     return jsonify(matching_posts)
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5002, debug=True)
