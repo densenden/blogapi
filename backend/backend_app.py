@@ -3,8 +3,6 @@ from flask_cors import CORS
 from flask_swagger_ui import get_swaggerui_blueprint
 from uuid import uuid4
 
-
-
 app = Flask(__name__)
 CORS(app)
 
@@ -33,58 +31,41 @@ POSTS = [
     {"id": 10, "title": "Garden Life", "content": "Busy bees hover\nButterflies dance through the air\nFlowers wave hello"}
 ]
 
-@app.route('/api/posts', methods=['GET'])
-def get_posts():
-    """
-    List all posts with optional sorting by title or content.
-    Supports query parameters: sort (title/content) and direction (asc/desc).
-    Returns: JSON response with posts list.
-    """
-    sort_field = request.args.get('sort')
-    sort_direction = request.args.get('direction', 'asc')
+@app.route('/api/posts', methods=['GET', 'POST'])
+def posts():
+    if request.method == 'GET':
+        sort_field = request.args.get('sort')
+        sort_direction = request.args.get('direction', 'asc')
 
-    if not sort_field:
-        return jsonify(POSTS)
+        if not sort_field:
+            return jsonify(POSTS)
 
-    # Validate sort parameters
-    if sort_field not in ['title', 'content']:
-        return jsonify({'error': 'Sort field must be either "title" or "content"'}), 400
+        if sort_field not in ['title', 'content']:
+            return jsonify({'error': 'Sort field must be either "title" or "content"'}), 400
 
-    if sort_direction not in ['asc', 'desc']:
-        return jsonify({'error': 'Direction must be either "asc" or "desc"'}), 400
+        if sort_direction not in ['asc', 'desc']:
+            return jsonify({'error': 'Direction must be either "asc" or "desc"'}), 400
 
-    # Sort the posts
-    sorted_posts = sorted(
-        POSTS,
-        key=lambda x: x[sort_field].lower(),
-        reverse=(sort_direction == 'desc')
-    )
+        sorted_posts = sorted(
+            POSTS,
+            key=lambda x: x[sort_field].lower(),
+            reverse=(sort_direction == 'desc')
+        )
 
-    return jsonify(sorted_posts)
+        return jsonify(sorted_posts)
 
-@app.route('/api/posts/', methods=['POST'])
-def add_post():
-    """
-    Create a new post with a UUID.
-    Accepts: JSON with title and content fields.
-    Returns: Created post with 201 status code.
-    """
-    data = request.get_json()
-    post = {
-        "id": str(uuid4()),
-        "title": data.get('title'),
-        "content": data.get('content')
-    }
-    POSTS.append(post)
-    return jsonify(post), 201
+    elif request.method == 'POST':
+        data = request.get_json()
+        post = {
+            "id": str(uuid4()),
+            "title": data.get('title'),
+            "content": data.get('content')
+        }
+        POSTS.append(post)
+        return jsonify(post), 201
 
 @app.route('/api/posts/<int:post_id>', methods=['DELETE'])
 def delete_post(post_id):
-    """
-    Delete a post by ID.
-    Parameters: post_id (int)
-    Returns: Success/error message with appropriate status code.
-    """
     for index, post in enumerate(POSTS):
         if post['id'] == post_id:
             POSTS.pop(index)
@@ -94,12 +75,6 @@ def delete_post(post_id):
 
 @app.route('/api/posts/<int:post_id>', methods=['PUT'])
 def update_post(post_id):
-    """
-    Update a post by ID.
-    Parameters: post_id (int)
-    Accepts: JSON with optional title and content fields.
-    Returns: Updated post or error message.
-    """
     data = request.get_json()
     for post in POSTS:
         if post['id'] == post_id:
@@ -112,14 +87,8 @@ def update_post(post_id):
 
 @app.route('/api/posts/search', methods=['GET'])
 def search_posts():
-    """
-    Search posts by title or content.
-    Accepts query parameters: title, content
-    Returns: List of matching posts.
-    """
     title_query = request.args.get('title', '').lower()
-    content_query = request.args.get('content', '').lower()
-
+    matching_posts = []
     for post in POSTS:
         if (title_query and title_query in post['title'].lower()) or \
                 (content_query and content_query in post['content'].lower()):

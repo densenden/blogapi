@@ -1,9 +1,10 @@
-var savedBaseUrl = localStorage.getItem('apiBaseUrl');
+window.onload = function() {
+    var savedBaseUrl = localStorage.getItem('apiBaseUrl');
     if (savedBaseUrl) {
         document.getElementById('api-base-url').value = savedBaseUrl;
         loadPosts();
     }
-}
+};
 
 function loadPosts() {
     var baseUrl = document.getElementById('api-base-url').value;
@@ -33,9 +34,9 @@ function loadPosts() {
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Failed to load posts');
         });
 }
+
 
 function addPost() {
     var baseUrl = document.getElementById('api-base-url').value;
@@ -69,6 +70,7 @@ function addPost() {
     });
 }
 
+
 function deletePost(postId) {
     if (!postId) {
         console.error('Post ID is required');
@@ -101,5 +103,4 @@ function escapeHtml(unsafe) {
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
 }
