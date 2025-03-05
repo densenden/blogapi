@@ -19,16 +19,16 @@ swagger_ui_blueprint = get_swaggerui_blueprint(
 app.register_blueprint(swagger_ui_blueprint, url_prefix=SWAGGER_URL)
 
 POSTS = [
-    {"id": 1, "title": "Cherry Blossom", "content": "Pink petals falling\nDancing in the spring breeze now\nNature's sweet goodbye"},
-    {"id": 2, "title": "Morning Dew", "content": "Dewdrops on grass blades\nSparkling in morning sunshine\nDay begins anew"},
-    {"id": 3, "title": "Autumn Moon", "content": "Harvest moon rises\nCasting shadows on the ground\nCrickets sing tonight"},
-    {"id": 4, "title": "Winter Snow", "content": "Soft flakes drifting down\nBlanket of white covers earth\nSilent winter's dream"},
-    {"id": 5, "title": "Mountain Path", "content": "Climbing mountain trails\nMist surrounds the rocky peaks\nBirds soar up above"},
-    {"id": 6, "title": "Ocean Waves", "content": "Waves crash on the shore\nFoam spreads across golden sand\nTide pulls back again"},
-    {"id": 7, "title": "Summer Rain", "content": "Thunder rolls distant\nRain drums against windowpanes\nLightning splits the sky"},
-    {"id": 8, "title": "Forest Walk", "content": "Green leaves filter light\nMossy stones mark ancient paths\nQuiet forest peace"},
-    {"id": 9, "title": "Night Sky", "content": "Stars pierce velvet dark\nMilky Way flows overhead\nCosmic river flows"},
-    {"id": 10, "title": "Garden Life", "content": "Busy bees hover\nButterflies dance through the air\nFlowers wave hello"}
+    {"id": str(uuid4()), "title": "Cherry Blossom", "content": "Pink petals falling\nDancing in the spring breeze now\nNature's sweet goodbye"},
+    {"id": str(uuid4()), "title": "Morning Dew", "content": "Dewdrops on grass blades\nSparkling in morning sunshine\nDay begins anew"},
+    {"id": str(uuid4()), "title": "Autumn Moon", "content": "Harvest moon rises\nCasting shadows on the ground\nCrickets sing tonight"},
+    {"id": str(uuid4()), "title": "Winter Snow", "content": "Soft flakes drifting down\nBlanket of white covers earth\nSilent winter's dream"},
+    {"id": str(uuid4()), "title": "Mountain Path", "content": "Climbing mountain trails\nMist surrounds the rocky peaks\nBirds soar up above"},
+    {"id": str(uuid4()), "title": "Ocean Waves", "content": "Waves crash on the shore\nFoam spreads across golden sand\nTide pulls back again"},
+    {"id": str(uuid4()), "title": "Summer Rain", "content": "Thunder rolls distant\nRain drums against windowpanes\nLightning splits the sky"},
+    {"id": str(uuid4()), "title": "Forest Walk", "content": "Green leaves filter light\nMossy stones mark ancient paths\nQuiet forest peace"},
+    {"id": str(uuid4()), "title": "Night Sky", "content": "Stars pierce velvet dark\nMilky Way flows overhead\nCosmic river flows"},
+    {"id": str(uuid4()), "title": "Garden Life", "content": "Busy bees hover\nButterflies dance through the air\nFlowers wave hello"}
 ]
 
 @app.route('/api/posts', methods=['GET', 'POST'])
